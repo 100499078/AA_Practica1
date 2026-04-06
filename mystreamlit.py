@@ -4,9 +4,6 @@ import joblib
 
 # Para la creación de este script nos hemos apoyado en IA generativa, concretamente en Claude, que nos ha ayudado a estructurar el código y a generar la interfaz de usuario. Hemos adaptado el código generado para que se ajuste a nuestro modelo y a las necesidades de nuestra aplicación.
  
-# Funciones necesarias para deserializar el modelo
-# Las incluyo a falta de ver lo de Clau
- 
 def transform_pdays(df):
     """Transforma la columna pdays: crea wascontacted y pdays_binned."""
     df = df.copy()
@@ -133,8 +130,6 @@ if st.button("🔍 Predecir"):
         "pdays":        pdays,
         "previous":     previous,
         "poutcome":     poutcome,
-        "wascontacted": wascontacted,
-        "pdays_binned": pdays_binned,
     }])
  
     prediction = model.predict(input_data)[0]
