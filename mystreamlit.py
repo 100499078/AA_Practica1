@@ -1,8 +1,6 @@
 import streamlit as st
 import pandas as pd
 import joblib
-
-# Para la creación de este script nos hemos apoyado en IA generativa, concretamente en Claude, que nos ha ayudado a estructurar el código y a generar la interfaz de usuario. Hemos adaptado el código generado para que se ajuste a nuestro modelo y a las necesidades de nuestra aplicación.
  
 def transform_pdays(df):
     """Transforma la columna pdays: crea wascontacted y pdays_binned."""
@@ -17,7 +15,6 @@ def transform_pdays(df):
     )
     return df
 
-# Cargamos el modelo entrenado
 @st.cache_resource
 def load_model():
     try:
@@ -33,9 +30,6 @@ model = load_model()
 if model is None:
     st.stop()
 
-# Interfaz Streamlit
-
-# Para crear un historial de predicciones: almacenamos cada predicción en session_state. Esto nos permitirá mostrar un resumen de las predicciones realizadas durante la sesión actual.
 if "historial" not in st.session_state:
     st.session_state.historial = []
 
@@ -93,10 +87,7 @@ with col5:
         "Resultado campaña anterior", ["unknown", "failure", "success", "other"]
     )
 
-# Predicción
 if st.button("🔍 Predecir"):
-
-    # Validaciones
     if duration == 0:
         st.warning("⚠️ Duración 0 segundos: no hubo contacto real. La predicción puede no ser fiable.")
     
@@ -155,7 +146,6 @@ if st.button("🔍 Predecir"):
             st.metric("Probabilidad de no suscripción", f"{proba_dict['no']:.1%}")
             st.progress(proba_dict['no'])
 
-    # Guardamos en historial
     registro = input_data.copy()
     registro["prediccion"] = "Sí ✅" if prediction == "yes" else "No ❌"
     if proba is not None:
@@ -165,15 +155,12 @@ if st.button("🔍 Predecir"):
     with st.expander("Ver datos introducidos"):
         st.dataframe(input_data)
 
-# Manejo del historial de predicciones
-
 if st.session_state.historial:
     st.divider()
     st.header("Historial de predicciones de esta sesión")
     historial_df = pd.concat(st.session_state.historial, ignore_index=True)
     st.dataframe(historial_df, use_container_width=True)
 
-    # Botón de descarga del historial en CSV
     st.download_button(
         label="Descargar historial como CSV",
         data=historial_df.to_csv(index=False).encode("utf-8"),
